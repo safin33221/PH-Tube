@@ -34,7 +34,7 @@ const loadCategories = () => {
 const dispalyCategories = (categories) => {
     const categoryContainer = document.getElementById('category-container');
     categories.forEach((item) => {
-        console.log(item);
+        // console.log(item);
         //Create button for categories
         const buttonContainer = document.createElement('div');
         buttonContainer.innerHTML = `

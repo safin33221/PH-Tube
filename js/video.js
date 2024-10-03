@@ -11,11 +11,25 @@ function getTimeString(time) {
 //Create load vide 
 
 
-const loadVideo = () => {
-    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+const loadVideo = (searchText = "") => {
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         .then(res => res.json())
         .then(data => dispalyVideo(data.videos))
         .then(error => console.error(error))
+}
+
+const loadVideoDetails = async(videoId) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`)
+    const data = await res.json();
+    displayDetails(data.video)
+}
+const displayDetails= (video) =>{
+    const modalContainer = document.getElementById('modal-content');
+    modalContainer.innerHTML = `
+        <img class="rounded-lg" src=${video.thumbnail}/>
+        <p>${video.description}</p>
+    `
+    document.getElementById('showModal').showModal()
 }
 const dispalyVideo = (videos) => {
 
@@ -32,13 +46,13 @@ const dispalyVideo = (videos) => {
 
         </div>
         `
-    }else{
+    } else {
         videoContainer.classList.add("grid")
     }
 
 
     videos.forEach((video) => {
-        console.log(video);
+        // console.log(video);
         const card = document.createElement('div');
         card.classList = "card card-compact"
         card.innerHTML = `
@@ -57,7 +71,7 @@ const dispalyVideo = (videos) => {
                         <p class="text-gray-400">${video.authors[0].profile_name}</p>
                         ${video.authors[0].verified === true ? '<img class="w-5 h-5" src ="https://img.icons8.com/?size=96&id=D9RtvkuOe31p&format=png"/>' : ''}                    
                     </div >
-    <p></p>
+                    <p> <button onclick="loadVideoDetails('${video.video_id}')" class="btn btn-sm btn-error">details</button> </p>
                 
                 </div >
             </div >
@@ -66,6 +80,10 @@ const dispalyVideo = (videos) => {
         videoContainer.append(card);
     });
 }
+
+document.getElementById('search-video').addEventListener('keyup',(event)=>{
+    loadVideo(event.target.value);
+})
 
 
 loadVideo()
